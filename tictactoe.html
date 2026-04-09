@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Tic Tac Toe</title>
+<style>
+  body { font-family: system-ui, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 40px; background: #1e1e2e; color: #eee; }
+  h1 { margin: 0 0 10px; }
+  #status { margin: 10px 0 20px; font-size: 1.2em; height: 1.4em; }
+  #board { display: grid; grid-template-columns: repeat(3, 100px); grid-template-rows: repeat(3, 100px); gap: 6px; }
+  .cell { background: #313244; border: none; font-size: 3em; color: #f5c2e7; cursor: pointer; border-radius: 8px; transition: background .15s; }
+  .cell:hover:not(:disabled) { background: #45475a; }
+  .cell:disabled { cursor: default; }
+  .x { color: #89b4fa; }
+  .o { color: #f9e2af; }
+  button#reset { margin-top: 20px; padding: 10px 20px; font-size: 1em; border: none; border-radius: 6px; background: #89b4fa; color: #1e1e2e; cursor: pointer; }
+  button#reset:hover { background: #b4befe; }
+</style>
+</head>
+<body>
+  <h1>Tic Tac Toe</h1>
+  <div id="status">X's turn</div>
+  <div id="board"></div>
+  <button id="reset">Reset</button>
+<script>
+  const board = document.getElementById('board');
+  const status = document.getElementById('status');
+  let cells, turn, over;
+  const wins = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+  function init() {
+    cells = Array(9).fill('');
+    turn = 'X';
+    over = false;
+    board.innerHTML = '';
+    cells.forEach((_, i) => {
+      const b = document.createElement('button');
+      b.className = 'cell';
+      b.dataset.i = i;
+      b.addEventListener('click', () => play(i));
+      board.appendChild(b);
+    });
+    status.textContent = "X's turn";
+  }
+
+  function play(i) {
+    if (over || cells[i]) return;
+    cells[i] = turn;
+    const btn = board.children[i];
+    btn.textContent = turn;
+    btn.classList.add(turn.toLowerCase());
+    btn.disabled = true;
+    const w = wins.find(line => line.every(k => cells[k] === turn));
+    if (w) {
+      status.textContent = `${turn} wins!`;
+      over = true;
+      [...board.children].forEach(c => c.disabled = true);
+      return;
+    }
+    if (cells.every(c => c)) { status.textContent = "Draw!"; over = true; return; }
+    turn = turn === 'X' ? 'O' : 'X';
+    status.textContent = `${turn}'s turn`;
+  }
+
+  document.getElementById('reset').addEventListener('click', init);
+  init();
+</script>
+</body>
+</html>
