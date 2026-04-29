@@ -14,108 +14,111 @@
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    padding: 10px;
+    padding: 8px;
   }
 
-  /* --- Time Section --- */
-  #time-section {
-    text-align: center;
-    border-bottom: 3px solid #000;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
+  /* --- Row 1: Time+Location | Weather --- */
+  #row1 {
+    display: table;
+    width: 100%;
+    border-bottom: 2px solid #000;
+    padding-bottom: 6px;
+    margin-bottom: 6px;
   }
+  #row1-left, #row1-right {
+    display: table-cell;
+    vertical-align: middle;
+  }
+  #row1-left {
+    width: 50%;
+    padding-right: 10px;
+    border-right: 1px solid #999;
+  }
+  #row1-right {
+    width: 50%;
+    padding-left: 10px;
+  }
+
+  /* Time */
   #clock {
-    font-size: 64px;
+    font-size: 52px;
     font-weight: bold;
-    letter-spacing: 3px;
+    letter-spacing: 2px;
+    text-align: center;
   }
   #date-display {
-    font-size: 22px;
-    margin-top: 4px;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 2px;
   }
 
-  /* --- Location Selector --- */
+  /* Location selector (under time) */
   #location-bar {
     text-align: center;
-    margin-bottom: 8px;
-    font-size: 16px;
+    margin-top: 6px;
+    font-size: 14px;
   }
   #location-bar select {
-    font-size: 16px;
+    font-size: 14px;
     font-family: serif;
-    padding: 4px 6px;
+    padding: 2px 4px;
     border: 1px solid #999;
     background: #fff;
+    max-width: 100%;
   }
   #location-bar input {
-    font-size: 16px;
+    font-size: 14px;
     font-family: serif;
-    padding: 4px 6px;
+    padding: 2px 4px;
     border: 1px solid #999;
-    width: 160px;
+    width: 100px;
   }
   #location-bar button {
-    font-size: 16px;
+    font-size: 14px;
     font-family: serif;
-    padding: 4px 12px;
+    padding: 2px 8px;
     border: 1px solid #999;
     background: #eee;
     cursor: pointer;
   }
 
-  /* --- Weather Section (full width) --- */
-  #weather-section {
-    border-bottom: 2px solid #000;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-  }
-  .section-title {
-    font-size: 18px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    border-bottom: 1px solid #999;
-    padding-bottom: 3px;
-    margin-bottom: 8px;
-  }
+  /* Weather (right side of row 1) */
   #location-name {
-    font-size: 17px;
+    font-size: 15px;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
   }
-  #weather-info {
-    font-size: 17px;
-    line-height: 1.5;
-  }
-  #weather-icon {
-    display: none;
-  }
+  #weather-icon { display: none; }
   #weather-temp {
-    font-size: 48px;
+    font-size: 42px;
     font-weight: bold;
     text-align: center;
   }
   #weather-desc {
     text-align: center;
-    font-size: 20px;
-    margin-bottom: 6px;
+    font-size: 18px;
+    margin-bottom: 4px;
   }
   #weather-details {
-    font-size: 16px;
-    line-height: 1.6;
+    font-size: 14px;
+    line-height: 1.5;
     text-align: center;
   }
   #weather-details span {
-    display: inline;
-    margin: 0 8px;
+    display: block;
+  }
+
+  /* Forecast row (full width, below row 1) */
+  #forecast-section {
+    border-bottom: 1px solid #999;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
   }
   .forecast-row {
     display: table;
     width: 100%;
-    margin-top: 8px;
-    border-top: 1px dotted #999;
-    padding-top: 6px;
+    padding-top: 4px;
   }
   .forecast-day {
     display: table-cell;
@@ -123,31 +126,54 @@
     font-size: 14px;
     width: 20%;
   }
-  .forecast-day .day-name { font-weight: bold; font-size: 15px; }
-  .forecast-day .day-desc { font-size: 13px; color: #555; }
-  .forecast-day .day-temp { font-size: 14px; }
+  .forecast-day .day-name { font-weight: bold; font-size: 14px; }
+  .forecast-day .day-desc { font-size: 12px; color: #555; }
+  .forecast-day .day-temp { font-size: 13px; }
 
-  /* --- Calendar Section (full width) --- */
-  #calendar-section {
-    margin-bottom: 10px;
-    border-bottom: 2px solid #000;
-    padding-bottom: 10px;
+  /* --- Row 2: Calendar | Photo --- */
+  #row2 {
+    display: table;
+    width: 100%;
+  }
+  #row2-left, #row2-right {
+    display: table-cell;
+    vertical-align: top;
+  }
+  #row2-left {
+    width: 60%;
+    padding-right: 8px;
+  }
+  #row2-right {
+    width: 40%;
+    padding-left: 8px;
+    vertical-align: middle;
+  }
+
+  /* Calendar */
+  .section-title {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 2px;
+    margin-bottom: 4px;
   }
   #calendar table {
     width: 100%;
     border-collapse: collapse;
   }
   #calendar th {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
-    padding: 5px 2px;
+    padding: 3px 2px;
     text-align: center;
     border-bottom: 1px solid #999;
   }
   #calendar td {
     text-align: center;
-    padding: 6px 2px;
-    font-size: 17px;
+    padding: 4px 2px;
+    font-size: 15px;
   }
   #calendar td.today {
     font-weight: bold;
@@ -159,22 +185,20 @@
   }
   #cal-header {
     text-align: center;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: bold;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
 
-  /* --- Photo (compact strip) --- */
+  /* Photo */
   #photo-section {
     text-align: center;
   }
   #photo-frame {
-    width: 60%;
-    max-height: 150px;
+    width: 100%;
     overflow: hidden;
     background: #eee;
     border: 1px solid #999;
-    margin: 0 auto;
   }
   #photo-frame img {
     width: 100%;
@@ -183,94 +207,88 @@
     -webkit-filter: grayscale(100%) contrast(1.2);
   }
   #photo-caption {
-    font-size: 13px;
+    font-size: 12px;
     font-style: italic;
-    margin-top: 3px;
+    margin-top: 2px;
     color: #666;
   }
 
-  /* --- Status bar --- */
+  /* Status bar */
   #status-bar {
-    margin-top: 8px;
-    font-size: 13px;
+    margin-top: 6px;
+    font-size: 12px;
     color: #999;
     text-align: center;
     border-top: 1px solid #ccc;
-    padding-top: 4px;
-  }
-
-  @media (max-width: 600px) {
-    #clock { font-size: 52px; }
-    #date-display { font-size: 18px; }
-    #weather-temp { font-size: 40px; }
-    #photo-frame { width: 70%; }
+    padding-top: 3px;
   }
 </style>
 </head>
 <body>
 
-<!-- Time -->
-<div id="time-section">
-  <div id="clock">--:--</div>
-  <div id="date-display">Loading...</div>
-</div>
-
-<!-- Location Selector -->
-<div id="location-bar">
-  <select id="city-select" onchange="onCitySelect()">
-    <option value="">-- Select City --</option>
-    <option value="auto">Auto-detect Location</option>
-    <option value="40.71,-74.01">New York</option>
-    <option value="34.05,-118.24">Los Angeles</option>
-    <option value="41.88,-87.63">Chicago</option>
-    <option value="29.76,-95.37">Houston</option>
-    <option value="37.77,-122.42">San Francisco</option>
-    <option value="47.61,-122.33">Seattle</option>
-    <option value="25.76,-80.19">Miami</option>
-    <option value="42.36,-71.06">Boston</option>
-    <option value="51.51,-0.13">London</option>
-    <option value="48.86,2.35">Paris</option>
-    <option value="35.68,139.69">Tokyo</option>
-    <option value="22.32,114.17">Hong Kong</option>
-    <option value="1.35,103.82">Singapore</option>
-    <option value="-33.87,151.21">Sydney</option>
-    <option value="custom">Other (type below)</option>
-  </select>
-  <span id="custom-location" style="display:none;">
-    <input id="custom-city" type="text" placeholder="City name">
-    <button onclick="searchCity()">Go</button>
-  </span>
-</div>
-
-<!-- Weather (full width) -->
-<div id="weather-section">
-  <div class="section-title">Weather</div>
-  <div id="location-name"></div>
-  <div id="weather-info">
+<!-- Row 1: Time+Location | Weather -->
+<div id="row1">
+  <div id="row1-left">
+    <div id="clock">--:--</div>
+    <div id="date-display">Loading...</div>
+    <div id="location-bar">
+      <select id="city-select" onchange="onCitySelect()">
+        <option value="">-- Select City --</option>
+        <option value="auto">Auto-detect</option>
+        <option value="40.71,-74.01">New York</option>
+        <option value="34.05,-118.24">Los Angeles</option>
+        <option value="41.88,-87.63">Chicago</option>
+        <option value="29.76,-95.37">Houston</option>
+        <option value="37.77,-122.42">San Francisco</option>
+        <option value="47.61,-122.33">Seattle</option>
+        <option value="25.76,-80.19">Miami</option>
+        <option value="42.36,-71.06">Boston</option>
+        <option value="51.51,-0.13">London</option>
+        <option value="48.86,2.35">Paris</option>
+        <option value="35.68,139.69">Tokyo</option>
+        <option value="22.32,114.17">Hong Kong</option>
+        <option value="1.35,103.82">Singapore</option>
+        <option value="-33.87,151.21">Sydney</option>
+        <option value="custom">Other...</option>
+      </select>
+      <div id="custom-location" style="display:none; margin-top:4px;">
+        <input id="custom-city" type="text" placeholder="City name">
+        <button onclick="searchCity()">Go</button>
+      </div>
+    </div>
+  </div>
+  <div id="row1-right">
+    <div id="location-name"></div>
     <div id="weather-icon"></div>
     <div id="weather-temp">--&deg;</div>
-    <div id="weather-desc">Loading weather...</div>
+    <div id="weather-desc">Loading...</div>
     <div id="weather-details">
       <span id="w-humidity">Humidity: --</span>
       <span id="w-wind">Wind: --</span>
       <span id="w-high-low">H: -- / L: --</span>
     </div>
-    <div class="forecast-row" id="forecast-row"></div>
   </div>
 </div>
 
-<!-- Calendar (full width) -->
-<div id="calendar-section">
-  <div class="section-title">Calendar</div>
-  <div id="calendar"></div>
+<!-- Forecast row (full width) -->
+<div id="forecast-section">
+  <div class="forecast-row" id="forecast-row"></div>
 </div>
 
-<!-- Photo (compact) -->
-<div id="photo-section">
-  <div id="photo-frame">
-    <img id="photo-img" src="" alt="Photo of the day">
+<!-- Row 2: Calendar | Photo -->
+<div id="row2">
+  <div id="row2-left">
+    <div class="section-title">Calendar</div>
+    <div id="calendar"></div>
   </div>
-  <div id="photo-caption"></div>
+  <div id="row2-right">
+    <div id="photo-section">
+      <div id="photo-frame">
+        <img id="photo-img" src="" alt="Photo">
+      </div>
+      <div id="photo-caption"></div>
+    </div>
+  </div>
 </div>
 
 <div id="status-bar">Last updated: --</div>
