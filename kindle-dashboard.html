@@ -69,11 +69,7 @@
     line-height: 1.5;
   }
   #weather-icon {
-    font-size: 28px;
-    font-weight: bold;
-    font-family: monospace;
-    text-align: center;
-    margin: 4px 0;
+    display: none;
   }
   #weather-temp {
     font-size: 32px;
@@ -106,7 +102,7 @@
     width: 20%;
   }
   .forecast-day .day-name { font-weight: bold; }
-  .forecast-day .day-icon { font-size: 18px; }
+  .forecast-day .day-desc { font-size: 10px; }
   .forecast-day .day-temp { font-size: 11px; }
 
   /* --- Calendar --- */
@@ -201,7 +197,7 @@
   <div id="left-col">
     <div class="section-title">Weather</div>
     <div id="weather-info">
-      <div id="weather-icon">--</div>
+      <div id="weather-icon"></div>
       <div id="weather-temp">--&deg;</div>
       <div id="weather-desc">Loading weather...</div>
       <div id="weather-details">
@@ -265,31 +261,31 @@ var currentPhotoIndex = 0;
 // WMO Weather Code to text/symbol mapping
 // ============================================================
 var WMO_CODES = {
-  0: { desc: "Clear sky", icon: "O" },
-  1: { desc: "Mainly clear", icon: "O" },
-  2: { desc: "Partly cloudy", icon: "O/" },
-  3: { desc: "Overcast", icon: "==" },
-  45: { desc: "Fog", icon: "~~" },
-  48: { desc: "Rime fog", icon: "~~" },
-  51: { desc: "Light drizzle", icon: ".." },
-  53: { desc: "Drizzle", icon: ".." },
-  55: { desc: "Heavy drizzle", icon: ".:." },
-  61: { desc: "Light rain", icon: ".." },
-  63: { desc: "Rain", icon: ".:." },
-  65: { desc: "Heavy rain", icon: ":::" },
-  71: { desc: "Light snow", icon: "* " },
-  73: { desc: "Snow", icon: "**" },
-  75: { desc: "Heavy snow", icon: "***" },
-  80: { desc: "Rain showers", icon: ".:." },
-  81: { desc: "Heavy showers", icon: ":::" },
-  82: { desc: "Violent showers", icon: "!!!" },
-  95: { desc: "Thunderstorm", icon: "/!\\" },
-  96: { desc: "Thunderstorm + hail", icon: "/!\\" },
-  99: { desc: "Thunderstorm + heavy hail", icon: "/!\\" }
+  0: { desc: "Clear" },
+  1: { desc: "Clear" },
+  2: { desc: "Partly Cloudy" },
+  3: { desc: "Cloudy" },
+  45: { desc: "Fog" },
+  48: { desc: "Fog" },
+  51: { desc: "Drizzle" },
+  53: { desc: "Drizzle" },
+  55: { desc: "Drizzle" },
+  61: { desc: "Light Rain" },
+  63: { desc: "Rain" },
+  65: { desc: "Heavy Rain" },
+  71: { desc: "Light Snow" },
+  73: { desc: "Snow" },
+  75: { desc: "Heavy Snow" },
+  80: { desc: "Showers" },
+  81: { desc: "Showers" },
+  82: { desc: "Storms" },
+  95: { desc: "Thunderstorm" },
+  96: { desc: "Thunderstorm" },
+  99: { desc: "Thunderstorm" }
 };
 
 function getWMO(code) {
-  return WMO_CODES[code] || { desc: "Unknown", icon: "?" };
+  return WMO_CODES[code] || { desc: "Unknown" };
 }
 
 // ============================================================
@@ -393,7 +389,7 @@ function displayWeather(data) {
   var current = data.current;
   var wmo = getWMO(current.weather_code);
 
-  document.getElementById("weather-icon").textContent = wmo.icon;
+  document.getElementById("weather-icon").textContent = "";
   document.getElementById("weather-temp").innerHTML = Math.round(current.temperature_2m) + "&deg;F";
   document.getElementById("weather-desc").textContent = wmo.desc;
   document.getElementById("w-humidity").textContent = "Humidity: " + current.relative_humidity_2m + "%";
@@ -416,7 +412,7 @@ function displayWeather(data) {
       var fwmo = getWMO(daily.weather_code[i]);
       forecastHtml += '<div class="forecast-day">' +
         '<div class="day-name">' + dayName + '</div>' +
-        '<div class="day-icon">' + fwmo.icon + '</div>' +
+        '<div class="day-desc">' + fwmo.desc + '</div>' +
         '<div class="day-temp">' + Math.round(daily.temperature_2m_max[i]) + '\u00B0/' +
         Math.round(daily.temperature_2m_min[i]) + '\u00B0</div></div>';
     }
