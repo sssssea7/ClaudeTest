@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kindle Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: serif;
+    background: #fff;
+    color: #000;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 8px;
+  }
+
+  /* --- Time Section --- */
+  #time-section {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 8px;
+    margin-bottom: 8px;
+  }
+  #clock {
+    font-size: 48px;
+    font-weight: bold;
+    letter-spacing: 2px;
+  }
+  #date-display {
+    font-size: 16px;
+    margin-top: 2px;
+  }
+
+  /* --- Main Grid --- */
+  #main {
+    display: table;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  #left-col, #right-col {
+    display: table-cell;
+    vertical-align: top;
+  }
+  #left-col {
+    width: 55%;
+    padding-right: 8px;
+    border-right: 1px solid #999;
+  }
+  #right-col {
+    width: 45%;
+    padding-left: 8px;
+  }
+
+  /* --- Weather --- */
+  .section-title {
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #999;
+    padding-bottom: 2px;
+    margin-bottom: 6px;
+  }
+  #weather-info {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  #weather-icon {
+    font-size: 36px;
+    text-align: center;
+    margin: 4px 0;
+  }
+  #weather-temp {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+  }
+  #weather-desc {
+    text-align: center;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  #weather-details {
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  #weather-details span {
+    display: block;
+  }
+  .forecast-row {
+    display: table;
+    width: 100%;
+    margin-top: 6px;
+    border-top: 1px dotted #ccc;
+    padding-top: 4px;
+  }
+  .forecast-day {
+    display: table-cell;
+    text-align: center;
+    font-size: 11px;
+    width: 20%;
+  }
+  .forecast-day .day-name { font-weight: bold; }
+  .forecast-day .day-icon { font-size: 18px; }
+  .forecast-day .day-temp { font-size: 11px; }
+
+  /* --- Calendar --- */
+  #calendar table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  #calendar th {
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px;
+    text-align: center;
+    border-bottom: 1px solid #999;
+  }
+  #calendar td {
+    text-align: center;
+    padding: 3px 2px;
+    font-size: 12px;
+  }
+  #calendar td.today {
+    font-weight: bold;
+    background: #000;
+    color: #fff;
+  }
+  #calendar td.other-month {
+    color: #bbb;
+  }
+  #cal-header {
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  /* --- Photo --- */
+  #photo-section {
+    border-top: 2px solid #000;
+    margin-top: 8px;
+    padding-top: 8px;
+    text-align: center;
+  }
+  #photo-frame {
+    width: 100%;
+    max-height: 300px;
+    overflow: hidden;
+    background: #eee;
+    border: 1px solid #999;
+    position: relative;
+  }
+  #photo-frame img {
+    width: 100%;
+    display: block;
+    /* Grayscale for e-ink */
+    filter: grayscale(100%) contrast(1.2);
+    -webkit-filter: grayscale(100%) contrast(1.2);
+  }
+  #photo-caption {
+    font-size: 11px;
+    font-style: italic;
+    margin-top: 2px;
+    color: #666;
+  }
+
+  /* --- Status bar --- */
+  #status-bar {
+    margin-top: 8px;
+    font-size: 10px;
+    color: #999;
+    text-align: center;
+    border-top: 1px solid #ccc;
+    padding-top: 4px;
+  }
+
+  /* Kindle-friendly: avoid anything that causes frequent repaints */
+  @media (max-width: 600px) {
+    #clock { font-size: 36px; }
+    #weather-temp { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Time -->
+<div id="time-section">
+  <div id="clock">--:--</div>
+  <div id="date-display">Loading...</div>
+</div>
+
+<!-- Weather + Calendar columns -->
+<div id="main">
+  <div id="left-col">
+    <div class="section-title">Weather</div>
+    <div id="weather-info">
+      <div id="weather-icon">--</div>
+      <div id="weather-temp">--&deg;</div>
+      <div id="weather-desc">Loading weather...</div>
+      <div id="weather-details">
+        <span id="w-humidity">Humidity: --</span>
+        <span id="w-wind">Wind: --</span>
+        <span id="w-high-low">H: -- / L: --</span>
+      </div>
+      <div class="forecast-row" id="forecast-row"></div>
+    </div>
+  </div>
+  <div id="right-col">
+    <div class="section-title">Calendar</div>
+    <div id="calendar"></div>
+  </div>
+</div>
+
+<!-- Photo -->
+<div id="photo-section">
+  <div class="section-title">Photo</div>
+  <div id="photo-frame">
+    <img id="photo-img" src="" alt="Photo of the day">
+  </div>
+  <div id="photo-caption" ></div>
+</div>
+
+<div id="status-bar">Last updated: --</div>
+
+<script>
+// ============================================================
+// CONFIG - edit these to customize
+// ============================================================
+var PHOTO_ROTATE_MINUTES = 10;  // rotate photo every N minutes
+var WEATHER_REFRESH_MINUTES = 30;
+var CLOCK_REFRESH_SECONDS = 30; // e-ink doesn't need per-second updates
+
+// ===================== HOW TO ADD YOUR OWN PHOTOS =====================
+// Option A: Local photos — place image files next to this HTML file in
+//           a "photos/" folder, then list them below:
+//   { url: "photos/my-vacation.jpg", caption: "Vacation" },
+//
+// Option B: Any image URL from the web:
+//   { url: "https://example.com/image.jpg", caption: "My Photo" },
+//
+// Option C: Use Lorem Picsum (free, no API key) — shown below as default.
+//           Each ID is a specific curated photo. Browse https://picsum.photos
+//           to find IDs you like.
+// ======================================================================
+var PHOTOS = [
+  { url: "https://picsum.photos/id/10/600/300", caption: "Forest" },
+  { url: "https://picsum.photos/id/29/600/300", caption: "Mountains" },
+  { url: "https://picsum.photos/id/37/600/300", caption: "Cliffs" },
+  { url: "https://picsum.photos/id/47/600/300", caption: "Lake" },
+  { url: "https://picsum.photos/id/100/600/300", caption: "Ocean" },
+  { url: "https://picsum.photos/id/129/600/300", caption: "Railway" },
+  { url: "https://picsum.photos/id/167/600/300", caption: "Architecture" },
+  { url: "https://picsum.photos/id/240/600/300", caption: "Sunset" }
+];
+var currentPhotoIndex = 0;
+
+// ============================================================
+// WMO Weather Code to text/symbol mapping
+// ============================================================
+var WMO_CODES = {
+  0: { desc: "Clear sky", icon: "☀" },
+  1: { desc: "Mainly clear", icon: "🌤" },
+  2: { desc: "Partly cloudy", icon: "⛅" },
+  3: { desc: "Overcast", icon: "☁" },
+  45: { desc: "Fog", icon: "🌫" },
+  48: { desc: "Rime fog", icon: "🌫" },
+  51: { desc: "Light drizzle", icon: "🌦" },
+  53: { desc: "Drizzle", icon: "🌦" },
+  55: { desc: "Heavy drizzle", icon: "🌧" },
+  61: { desc: "Light rain", icon: "🌦" },
+  63: { desc: "Rain", icon: "🌧" },
+  65: { desc: "Heavy rain", icon: "🌧" },
+  71: { desc: "Light snow", icon: "🌨" },
+  73: { desc: "Snow", icon: "❄" },
+  75: { desc: "Heavy snow", icon: "❄" },
+  80: { desc: "Rain showers", icon: "🌧" },
+  81: { desc: "Heavy showers", icon: "🌧" },
+  82: { desc: "Violent showers", icon: "⛈" },
+  95: { desc: "Thunderstorm", icon: "⛈" },
+  96: { desc: "Thunderstorm + hail", icon: "⛈" },
+  99: { desc: "Thunderstorm + heavy hail", icon: "⛈" }
+};
+
+function getWMO(code) {
+  return WMO_CODES[code] || { desc: "Unknown", icon: "?" };
+}
+
+// ============================================================
+// CLOCK
+// ============================================================
+function updateClock() {
+  var now = new Date();
+  var h = now.getHours();
+  var m = now.getMinutes();
+  var ampm = h >= 12 ? "PM" : "AM";
+  var h12 = h % 12 || 12;
+  var mStr = m < 10 ? "0" + m : m;
+
+  document.getElementById("clock").textContent = h12 + ":" + mStr + " " + ampm;
+
+  var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  var months = ["January","February","March","April","May","June",
+                "July","August","September","October","November","December"];
+  document.getElementById("date-display").textContent =
+    days[now.getDay()] + ", " + months[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear();
+}
+
+// ============================================================
+// CALENDAR
+// ============================================================
+function renderCalendar() {
+  var now = new Date();
+  var year = now.getFullYear();
+  var month = now.getMonth();
+  var today = now.getDate();
+
+  var months = ["January","February","March","April","May","June",
+                "July","August","September","October","November","December"];
+
+  var firstDay = new Date(year, month, 1).getDay();
+  var daysInMonth = new Date(year, month + 1, 0).getDate();
+  var daysInPrev = new Date(year, month, 0).getDate();
+
+  var html = '<div id="cal-header">' + months[month] + ' ' + year + '</div>';
+  html += '<table><tr>';
+  var dayNames = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+  for (var i = 0; i < 7; i++) html += '<th>' + dayNames[i] + '</th>';
+  html += '</tr><tr>';
+
+  // Previous month filler
+  for (var i = 0; i < firstDay; i++) {
+    var d = daysInPrev - firstDay + 1 + i;
+    html += '<td class="other-month">' + d + '</td>';
+  }
+
+  var cell = firstDay;
+  for (var d = 1; d <= daysInMonth; d++) {
+    var cls = (d === today) ? ' class="today"' : '';
+    html += '<td' + cls + '>' + d + '</td>';
+    cell++;
+    if (cell % 7 === 0 && d < daysInMonth) html += '</tr><tr>';
+  }
+
+  // Next month filler
+  var remaining = 7 - (cell % 7);
+  if (remaining < 7) {
+    for (var i = 1; i <= remaining; i++) {
+      html += '<td class="other-month">' + i + '</td>';
+    }
+  }
+  html += '</tr></table>';
+
+  document.getElementById("calendar").innerHTML = html;
+}
+
+// ============================================================
+// WEATHER (Open-Meteo, free, no API key)
+// ============================================================
+function fetchWeather(lat, lon) {
+  var url = "https://api.open-meteo.com/v1/forecast?" +
+    "latitude=" + lat + "&longitude=" + lon +
+    "&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m" +
+    "&daily=weather_code,temperature_2m_max,temperature_2m_min" +
+    "&temperature_unit=fahrenheit&wind_speed_unit=mph" +
+    "&timezone=auto&forecast_days=5";
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        displayWeather(data);
+      } catch(e) {
+        document.getElementById("weather-desc").textContent = "Error parsing weather";
+      }
+    }
+  };
+  xhr.onerror = function() {
+    document.getElementById("weather-desc").textContent = "Weather unavailable";
+  };
+  xhr.send();
+}
+
+function displayWeather(data) {
+  var current = data.current;
+  var wmo = getWMO(current.weather_code);
+
+  document.getElementById("weather-icon").textContent = wmo.icon;
+  document.getElementById("weather-temp").innerHTML = Math.round(current.temperature_2m) + "&deg;F";
+  document.getElementById("weather-desc").textContent = wmo.desc;
+  document.getElementById("w-humidity").textContent = "Humidity: " + current.relative_humidity_2m + "%";
+  document.getElementById("w-wind").textContent = "Wind: " + Math.round(current.wind_speed_10m) + " mph";
+
+  var daily = data.daily;
+  if (daily) {
+    document.getElementById("w-high-low").textContent =
+      "H: " + Math.round(daily.temperature_2m_max[0]) + "\u00B0 / L: " + Math.round(daily.temperature_2m_min[0]) + "\u00B0";
+
+    // 5-day forecast
+    var forecastHtml = "";
+    var dayNames = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    for (var i = 1; i < daily.time.length && i <= 5; i++) {
+      var d = new Date(daily.time[i] + "T00:00:00");
+      var fwmo = getWMO(daily.weather_code[i]);
+      forecastHtml += '<div class="forecast-day">' +
+        '<div class="day-name">' + dayNames[d.getDay()] + '</div>' +
+        '<div class="day-icon">' + fwmo.icon + '</div>' +
+        '<div class="day-temp">' + Math.round(daily.temperature_2m_max[i]) + '\u00B0/' +
+        Math.round(daily.temperature_2m_min[i]) + '\u00B0</div></div>';
+    }
+    document.getElementById("forecast-row").innerHTML = forecastHtml;
+  }
+
+  updateStatus();
+}
+
+function getLocationAndWeather() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        fetchWeather(pos.coords.latitude, pos.coords.longitude);
+      },
+      function(err) {
+        // Fallback: New York City
+        document.getElementById("weather-desc").textContent = "Location denied, using NYC";
+        fetchWeather(40.71, -74.01);
+      },
+      { timeout: 10000 }
+    );
+  } else {
+    document.getElementById("weather-desc").textContent = "Geolocation not supported";
+    fetchWeather(40.71, -74.01);
+  }
+}
+
+// ============================================================
+// PHOTOS
+// ============================================================
+function rotatePhoto() {
+  var photo = PHOTOS[currentPhotoIndex];
+  // Append timestamp to bust cache
+  var img = document.getElementById("photo-img");
+  img.src = photo.url;
+  document.getElementById("photo-caption").textContent = photo.caption;
+  currentPhotoIndex = (currentPhotoIndex + 1) % PHOTOS.length;
+}
+
+// ============================================================
+// STATUS
+// ============================================================
+function updateStatus() {
+  var now = new Date();
+  var h = now.getHours();
+  var m = now.getMinutes();
+  var ampm = h >= 12 ? "PM" : "AM";
+  var h12 = h % 12 || 12;
+  var mStr = m < 10 ? "0" + m : m;
+  document.getElementById("status-bar").textContent = "Last updated: " + h12 + ":" + mStr + " " + ampm;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  updateClock();
+  renderCalendar();
+  getLocationAndWeather();
+  rotatePhoto();
+
+  // Refresh intervals (kept slow for e-ink)
+  setInterval(updateClock, CLOCK_REFRESH_SECONDS * 1000);
+  setInterval(renderCalendar, 60 * 60 * 1000); // hourly
+  setInterval(getLocationAndWeather, WEATHER_REFRESH_MINUTES * 60 * 1000);
+  setInterval(rotatePhoto, PHOTO_ROTATE_MINUTES * 60 * 1000);
+}
+
+init();
+</script>
+</body>
+</html>
