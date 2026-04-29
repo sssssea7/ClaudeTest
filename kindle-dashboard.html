@@ -54,6 +54,41 @@
     padding-left: 8px;
   }
 
+  /* --- Location Selector --- */
+  #location-bar {
+    text-align: center;
+    margin-bottom: 6px;
+    font-size: 12px;
+  }
+  #location-bar select {
+    font-size: 12px;
+    font-family: serif;
+    padding: 2px 4px;
+    border: 1px solid #999;
+    background: #fff;
+  }
+  #location-bar input {
+    font-size: 12px;
+    font-family: serif;
+    padding: 2px 4px;
+    border: 1px solid #999;
+    width: 120px;
+  }
+  #location-bar button {
+    font-size: 12px;
+    font-family: serif;
+    padding: 2px 8px;
+    border: 1px solid #999;
+    background: #eee;
+    cursor: pointer;
+  }
+  #location-name {
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 4px;
+  }
+
   /* --- Weather --- */
   .section-title {
     font-size: 14px;
@@ -192,10 +227,38 @@
   <div id="date-display">Loading...</div>
 </div>
 
+<!-- Location Selector -->
+<div id="location-bar">
+  <select id="city-select" onchange="onCitySelect()">
+    <option value="">-- Select City --</option>
+    <option value="auto">Auto-detect Location</option>
+    <option value="40.71,-74.01">New York</option>
+    <option value="34.05,-118.24">Los Angeles</option>
+    <option value="41.88,-87.63">Chicago</option>
+    <option value="29.76,-95.37">Houston</option>
+    <option value="37.77,-122.42">San Francisco</option>
+    <option value="47.61,-122.33">Seattle</option>
+    <option value="25.76,-80.19">Miami</option>
+    <option value="42.36,-71.06">Boston</option>
+    <option value="51.51,-0.13">London</option>
+    <option value="48.86,2.35">Paris</option>
+    <option value="35.68,139.69">Tokyo</option>
+    <option value="22.32,114.17">Hong Kong</option>
+    <option value="1.35,103.82">Singapore</option>
+    <option value="-33.87,151.21">Sydney</option>
+    <option value="custom">Other (type below)</option>
+  </select>
+  <span id="custom-location" style="display:none;">
+    <input id="custom-city" type="text" placeholder="City name">
+    <button onclick="searchCity()">Go</button>
+  </span>
+</div>
+
 <!-- Weather + Calendar columns -->
 <div id="main">
   <div id="left-col">
     <div class="section-title">Weather</div>
+    <div id="location-name"></div>
     <div id="weather-info">
       <div id="weather-icon"></div>
       <div id="weather-temp">--&deg;</div>
@@ -422,22 +485,130 @@ function displayWeather(data) {
   updateStatus();
 }
 
-function getLocationAndWeather() {
+// ============================================================
+// LOCATION
+// ============================================================
+var savedLat = null;
+var savedLon = null;
+var savedCityName = "";
+
+function saveLocation(lat, lon, name) {
+  savedLat = lat;
+  savedLon = lon;
+  savedCityName = name;
+  try {
+    localStorage.setItem("kindle_lat", lat);
+    localStorage.setItem("kindle_lon", lon);
+    localStorage.setItem("kindle_city", name);
+  } catch(e) {}
+}
+
+function loadSavedLocation() {
+  try {
+    var lat = localStorage.getItem("kindle_lat");
+    var lon = localStorage.getItem("kindle_lon");
+    var name = localStorage.getItem("kindle_city");
+    if (lat && lon) {
+      savedLat = parseFloat(lat);
+      savedLon = parseFloat(lon);
+      savedCityName = name || "";
+      return true;
+    }
+  } catch(e) {}
+  return false;
+}
+
+function onCitySelect() {
+  var sel = document.getElementById("city-select");
+  var val = sel.value;
+  var customEl = document.getElementById("custom-location");
+
+  if (val === "custom") {
+    customEl.style.display = "";
+    return;
+  }
+  customEl.style.display = "none";
+
+  if (val === "auto") {
+    autoDetectLocation();
+    return;
+  }
+  if (val === "") return;
+
+  var parts = val.split(",");
+  var lat = parseFloat(parts[0]);
+  var lon = parseFloat(parts[1]);
+  var name = sel.options[sel.selectedIndex].text;
+  saveLocation(lat, lon, name);
+  document.getElementById("location-name").textContent = name;
+  fetchWeather(lat, lon);
+}
+
+function searchCity() {
+  var city = document.getElementById("custom-city").value;
+  if (!city) return;
+
+  document.getElementById("weather-desc").textContent = "Searching...";
+
+  var url = "https://geocoding-api.open-meteo.com/v1/search?name=" +
+    encodeURIComponent(city) + "&count=1&language=en&format=json";
+
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", url, true);
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if (data.results && data.results.length > 0) {
+          var r = data.results[0];
+          var name = r.name + (r.admin1 ? ", " + r.admin1 : "") + (r.country ? ", " + r.country : "");
+          saveLocation(r.latitude, r.longitude, name);
+          document.getElementById("location-name").textContent = name;
+          document.getElementById("custom-location").style.display = "none";
+          fetchWeather(r.latitude, r.longitude);
+        } else {
+          document.getElementById("weather-desc").textContent = "City not found";
+        }
+      } catch(e) {
+        document.getElementById("weather-desc").textContent = "Search error";
+      }
+    }
+  };
+  xhr.send();
+}
+
+function autoDetectLocation() {
   if (navigator.geolocation) {
+    document.getElementById("weather-desc").textContent = "Detecting location...";
     navigator.geolocation.getCurrentPosition(
       function(pos) {
+        saveLocation(pos.coords.latitude, pos.coords.longitude, "Current Location");
+        document.getElementById("location-name").textContent = "Current Location";
         fetchWeather(pos.coords.latitude, pos.coords.longitude);
       },
       function(err) {
-        // Fallback: New York City
-        document.getElementById("weather-desc").textContent = "Location denied, using NYC";
+        document.getElementById("weather-desc").textContent = "Location denied";
+        // Fall back to NYC
+        saveLocation(40.71, -74.01, "New York (default)");
+        document.getElementById("location-name").textContent = "New York (default)";
         fetchWeather(40.71, -74.01);
       },
       { timeout: 10000 }
     );
   } else {
     document.getElementById("weather-desc").textContent = "Geolocation not supported";
+    saveLocation(40.71, -74.01, "New York (default)");
+    document.getElementById("location-name").textContent = "New York (default)";
     fetchWeather(40.71, -74.01);
+  }
+}
+
+function getLocationAndWeather() {
+  if (savedLat !== null && savedLon !== null) {
+    document.getElementById("location-name").textContent = savedCityName;
+    fetchWeather(savedLat, savedLon);
+  } else {
+    autoDetectLocation();
   }
 }
 
@@ -470,6 +641,7 @@ function updateStatus() {
 // INIT
 // ============================================================
 function init() {
+  loadSavedLocation();
   updateClock();
   renderCalendar();
   getLocationAndWeather();
