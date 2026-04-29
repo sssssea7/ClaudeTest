@@ -352,10 +352,24 @@ function getWMO(code) {
 }
 
 // ============================================================
+// TIMEZONE — offset from UTC in seconds, set by weather API
+// ============================================================
+var utcOffsetSeconds = null; // null = use device local time
+
+// Get a Date adjusted to the selected city's timezone
+function getCityNow() {
+  var now = new Date();
+  if (utcOffsetSeconds === null) return now;
+  // Convert to UTC, then apply the city's offset
+  var utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+  return new Date(utcMs + utcOffsetSeconds * 1000);
+}
+
+// ============================================================
 // CLOCK
 // ============================================================
 function updateClock() {
-  var now = new Date();
+  var now = getCityNow();
   var h = now.getHours();
   var m = now.getMinutes();
   var ampm = h >= 12 ? "PM" : "AM";
@@ -375,7 +389,7 @@ function updateClock() {
 // CALENDAR
 // ============================================================
 function renderCalendar() {
-  var now = new Date();
+  var now = getCityNow();
   var year = now.getFullYear();
   var month = now.getMonth();
   var today = now.getDate();
@@ -449,6 +463,15 @@ function fetchWeather(lat, lon) {
 }
 
 function displayWeather(data) {
+  // Update timezone from API response
+  if (typeof data.utc_offset_seconds !== "undefined") {
+    utcOffsetSeconds = data.utc_offset_seconds;
+    try { localStorage.setItem("kindle_utc_offset", utcOffsetSeconds); } catch(e) {}
+    // Immediately update clock and calendar to new timezone
+    updateClock();
+    renderCalendar();
+  }
+
   var current = data.current;
   var wmo = getWMO(current.weather_code);
 
@@ -508,10 +531,12 @@ function loadSavedLocation() {
     var lat = localStorage.getItem("kindle_lat");
     var lon = localStorage.getItem("kindle_lon");
     var name = localStorage.getItem("kindle_city");
+    var offset = localStorage.getItem("kindle_utc_offset");
     if (lat && lon) {
       savedLat = parseFloat(lat);
       savedLon = parseFloat(lon);
       savedCityName = name || "";
+      if (offset !== null) utcOffsetSeconds = parseInt(offset, 10);
       return true;
     }
   } catch(e) {}
@@ -628,7 +653,7 @@ function rotatePhoto() {
 // STATUS
 // ============================================================
 function updateStatus() {
-  var now = new Date();
+  var now = getCityNow();
   var h = now.getHours();
   var m = now.getMinutes();
   var ampm = h >= 12 ? "PM" : "AM";
