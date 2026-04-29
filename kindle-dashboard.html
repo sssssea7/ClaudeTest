@@ -14,149 +14,140 @@
     width: 100%;
     max-width: 600px;
     margin: 0 auto;
-    padding: 8px;
+    padding: 10px;
   }
 
   /* --- Time Section --- */
   #time-section {
     text-align: center;
-    border-bottom: 2px solid #000;
-    padding-bottom: 8px;
-    margin-bottom: 8px;
+    border-bottom: 3px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
   }
   #clock {
-    font-size: 48px;
+    font-size: 64px;
     font-weight: bold;
-    letter-spacing: 2px;
+    letter-spacing: 3px;
   }
   #date-display {
-    font-size: 16px;
-    margin-top: 2px;
-  }
-
-  /* --- Main Grid --- */
-  #main {
-    display: table;
-    width: 100%;
-    border-collapse: collapse;
-  }
-  #left-col, #right-col {
-    display: table-cell;
-    vertical-align: top;
-  }
-  #left-col {
-    width: 55%;
-    padding-right: 8px;
-    border-right: 1px solid #999;
-  }
-  #right-col {
-    width: 45%;
-    padding-left: 8px;
+    font-size: 22px;
+    margin-top: 4px;
   }
 
   /* --- Location Selector --- */
   #location-bar {
     text-align: center;
-    margin-bottom: 6px;
-    font-size: 12px;
+    margin-bottom: 8px;
+    font-size: 16px;
   }
   #location-bar select {
-    font-size: 12px;
+    font-size: 16px;
     font-family: serif;
-    padding: 2px 4px;
+    padding: 4px 6px;
     border: 1px solid #999;
     background: #fff;
   }
   #location-bar input {
-    font-size: 12px;
+    font-size: 16px;
     font-family: serif;
-    padding: 2px 4px;
+    padding: 4px 6px;
     border: 1px solid #999;
-    width: 120px;
+    width: 160px;
   }
   #location-bar button {
-    font-size: 12px;
+    font-size: 16px;
     font-family: serif;
-    padding: 2px 8px;
+    padding: 4px 12px;
     border: 1px solid #999;
     background: #eee;
     cursor: pointer;
   }
-  #location-name {
-    font-size: 13px;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 4px;
-  }
 
-  /* --- Weather --- */
+  /* --- Weather Section (full width) --- */
+  #weather-section {
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
   .section-title {
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 1px;
     border-bottom: 1px solid #999;
-    padding-bottom: 2px;
-    margin-bottom: 6px;
+    padding-bottom: 3px;
+    margin-bottom: 8px;
+  }
+  #location-name {
+    font-size: 17px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 4px;
   }
   #weather-info {
-    font-size: 13px;
+    font-size: 17px;
     line-height: 1.5;
   }
   #weather-icon {
     display: none;
   }
   #weather-temp {
-    font-size: 32px;
+    font-size: 48px;
     font-weight: bold;
     text-align: center;
   }
   #weather-desc {
     text-align: center;
-    font-size: 14px;
+    font-size: 20px;
     margin-bottom: 6px;
   }
   #weather-details {
-    font-size: 12px;
+    font-size: 16px;
     line-height: 1.6;
+    text-align: center;
   }
   #weather-details span {
-    display: block;
+    display: inline;
+    margin: 0 8px;
   }
   .forecast-row {
     display: table;
     width: 100%;
-    margin-top: 6px;
-    border-top: 1px dotted #ccc;
-    padding-top: 4px;
+    margin-top: 8px;
+    border-top: 1px dotted #999;
+    padding-top: 6px;
   }
   .forecast-day {
     display: table-cell;
     text-align: center;
-    font-size: 11px;
+    font-size: 14px;
     width: 20%;
   }
-  .forecast-day .day-name { font-weight: bold; }
-  .forecast-day .day-desc { font-size: 10px; }
-  .forecast-day .day-temp { font-size: 11px; }
+  .forecast-day .day-name { font-weight: bold; font-size: 15px; }
+  .forecast-day .day-desc { font-size: 13px; color: #555; }
+  .forecast-day .day-temp { font-size: 14px; }
 
-  /* --- Calendar --- */
+  /* --- Calendar Section (full width) --- */
+  #calendar-section {
+    margin-bottom: 10px;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+  }
   #calendar table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 12px;
   }
   #calendar th {
-    font-size: 11px;
+    font-size: 16px;
     font-weight: bold;
-    padding: 2px;
+    padding: 5px 2px;
     text-align: center;
     border-bottom: 1px solid #999;
   }
   #calendar td {
     text-align: center;
-    padding: 3px 2px;
-    font-size: 12px;
+    padding: 6px 2px;
+    font-size: 17px;
   }
   #calendar td.today {
     font-weight: bold;
@@ -168,54 +159,51 @@
   }
   #cal-header {
     text-align: center;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
 
-  /* --- Photo --- */
+  /* --- Photo (compact strip) --- */
   #photo-section {
-    border-top: 2px solid #000;
-    margin-top: 8px;
-    padding-top: 8px;
     text-align: center;
   }
   #photo-frame {
-    width: 100%;
-    max-height: 300px;
+    width: 60%;
+    max-height: 150px;
     overflow: hidden;
     background: #eee;
     border: 1px solid #999;
-    position: relative;
+    margin: 0 auto;
   }
   #photo-frame img {
     width: 100%;
     display: block;
-    /* Grayscale for e-ink */
     filter: grayscale(100%) contrast(1.2);
     -webkit-filter: grayscale(100%) contrast(1.2);
   }
   #photo-caption {
-    font-size: 11px;
+    font-size: 13px;
     font-style: italic;
-    margin-top: 2px;
+    margin-top: 3px;
     color: #666;
   }
 
   /* --- Status bar --- */
   #status-bar {
     margin-top: 8px;
-    font-size: 10px;
+    font-size: 13px;
     color: #999;
     text-align: center;
     border-top: 1px solid #ccc;
     padding-top: 4px;
   }
 
-  /* Kindle-friendly: avoid anything that causes frequent repaints */
   @media (max-width: 600px) {
-    #clock { font-size: 36px; }
-    #weather-temp { font-size: 26px; }
+    #clock { font-size: 52px; }
+    #date-display { font-size: 18px; }
+    #weather-temp { font-size: 40px; }
+    #photo-frame { width: 70%; }
   }
 </style>
 </head>
@@ -254,36 +242,35 @@
   </span>
 </div>
 
-<!-- Weather + Calendar columns -->
-<div id="main">
-  <div id="left-col">
-    <div class="section-title">Weather</div>
-    <div id="location-name"></div>
-    <div id="weather-info">
-      <div id="weather-icon"></div>
-      <div id="weather-temp">--&deg;</div>
-      <div id="weather-desc">Loading weather...</div>
-      <div id="weather-details">
-        <span id="w-humidity">Humidity: --</span>
-        <span id="w-wind">Wind: --</span>
-        <span id="w-high-low">H: -- / L: --</span>
-      </div>
-      <div class="forecast-row" id="forecast-row"></div>
+<!-- Weather (full width) -->
+<div id="weather-section">
+  <div class="section-title">Weather</div>
+  <div id="location-name"></div>
+  <div id="weather-info">
+    <div id="weather-icon"></div>
+    <div id="weather-temp">--&deg;</div>
+    <div id="weather-desc">Loading weather...</div>
+    <div id="weather-details">
+      <span id="w-humidity">Humidity: --</span>
+      <span id="w-wind">Wind: --</span>
+      <span id="w-high-low">H: -- / L: --</span>
     </div>
-  </div>
-  <div id="right-col">
-    <div class="section-title">Calendar</div>
-    <div id="calendar"></div>
+    <div class="forecast-row" id="forecast-row"></div>
   </div>
 </div>
 
-<!-- Photo -->
+<!-- Calendar (full width) -->
+<div id="calendar-section">
+  <div class="section-title">Calendar</div>
+  <div id="calendar"></div>
+</div>
+
+<!-- Photo (compact) -->
 <div id="photo-section">
-  <div class="section-title">Photo</div>
   <div id="photo-frame">
     <img id="photo-img" src="" alt="Photo of the day">
   </div>
-  <div id="photo-caption" ></div>
+  <div id="photo-caption"></div>
 </div>
 
 <div id="status-bar">Last updated: --</div>
